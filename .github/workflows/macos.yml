@@ -9,6 +9,7 @@ on:
       - appveyor.yml
       - .github/workflows/docker.yml
       - .github/workflows/linux.yml
+      - .github/workflows/windows.yml
   pull_request:
     branches:
       - master
@@ -16,6 +17,7 @@ on:
       - appveyor.yml
       - .github/workflows/docker.yml
       - .github/workflows/linux.yml
+      - .github/workflows/windows.yml
 
 jobs:
   build:

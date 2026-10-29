@@ -1,0 +1,176 @@
+name: Windows workflow
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - appveyor.yml
+      - .github/workflows/docker.yml
+      - .github/workflows/linux.yml
+      - .github/workflows/macos.yml
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - appveyor.yml
+      - .github/workflows/docker.yml
+      - .github/workflows/linux.yml
+      - .github/workflows/macos.yml
+
+env:
+  QT_VERSION: 6.11.1
+  QT_ARCH: win64_msvc2022_64
+  # the *.pc files inside the prebuilt dependencies hardcode this prefix
+  NOMACS_DEPENDENCIES: C:\projects\nomacs\3rd-party
+  DEPENDENCIES_URL: https://github.com/novomesk/downloads/raw/refs/heads/main/nomacs/nomacs-dependencies-2026-10-23.7z
+  CCACHE_DIR: ${{ github.workspace }}\.ccache
+  CCACHE_MAXSIZE: 1G
+  CCACHE_COMPILERCHECK: content
+  CCACHE_NOHASHDIR: "true"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    name: build (Qt6, x64)
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Install ccache
+        shell: pwsh
+        run: choco install ccache --no-progress -y
+
+      - name: Cache ccache
+        uses: actions/cache@v5
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ${{ runner.os }}-ccache-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-ccache-
+
+      - name: Verify ccache works with MSVC
+        shell: cmd
+        run: |
+          ccache --version
+          echo int main() { return 0; } > "%RUNNER_TEMP%\ccache_test.cpp"
+          ccache cl.exe /nologo /c /EHsc /Fo"%RUNNER_TEMP%\ccache_test.obj" "%RUNNER_TEMP%\ccache_test.cpp"
+          if errorlevel 1 exit /b 1
+          ccache --show-stats
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          arch: ${{ env.QT_ARCH }}
+          # qt5compat is required by quazip, qtimageformats for the base image formats
+          modules: qt5compat qtimageformats
+          cache: true
+          cache-key-prefix: ${{ runner.os }}-qt
+
+      # computing the key from the download url keeps the cached dependencies in sync with the archive
+      - name: Get dependencies key
+        id: get_dependencies_key
+        shell: bash
+        run: echo "KEY=$(echo '${{ env.DEPENDENCIES_URL }}' | sha256sum | cut -c1-16)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        id: cache_dependencies
+        uses: actions/cache@v5
+        with:
+          path: ${{ env.NOMACS_DEPENDENCIES }}
+          key: ${{ runner.os }}-dependencies-${{ steps.get_dependencies_key.outputs.KEY }}
+
+      - name: Download dependencies
+        if: steps.cache_dependencies.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP "nomacs-dependencies.7z"
+          Invoke-WebRequest -Uri "$env:DEPENDENCIES_URL" -OutFile $archive
+
+          $sevenZip = Join-Path $env:ProgramFiles "7-Zip\7z.exe"
+          if (-not (Test-Path $sevenZip)) {
+            $sevenZip = (Get-Command 7z.exe).Source
+          }
+          Write-Host "using $sevenZip"
+
+          New-Item -ItemType Directory -Force -Path "$env:NOMACS_DEPENDENCIES" | Out-Null
+          & $sevenZip x -y "-o$env:NOMACS_DEPENDENCIES" $archive
+
+          if ($LASTEXITCODE -ne 0) { throw "failed to unpack the dependencies" }
+          Remove-Item $archive
+
+      - name: Verify dependencies
+        shell: pwsh
+        run: |
+          $pkgconf = Join-Path "$env:NOMACS_DEPENDENCIES" "bin\pkgconf.exe"
+          if (-not (Test-Path $pkgconf)) { throw "pkgconf.exe not found - were the dependencies unpacked?" }
+
+          Write-Host "dependencies: $env:NOMACS_DEPENDENCIES"
+          Get-ChildItem "$env:NOMACS_DEPENDENCIES" | Select-Object -ExpandProperty Name
+
+          $pcpath = $env:NOMACS_DEPENDENCIES.Replace("\", "/") + "/lib/pkgconfig"
+          & $pkgconf --with-path="$pcpath" --modversion exiv2 libraw libtiff-4
+          if ($LASTEXITCODE -ne 0) { throw "pkg-config lookup failed - the *.pc files need to be found in $pcpath" }
+
+      - name: Configure
+        shell: pwsh
+        run: |
+          cmake -S ImageLounge -B build -G Ninja `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DBUILD_SHARED_LIBS=ON `
+            -DQT_VERSION_MAJOR=6 `
+            -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR;$env:NOMACS_DEPENDENCIES" `
+            -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\installer\nomacs.x64" `
+            -DOpenCV_DIR="$env:NOMACS_DEPENDENCIES/lib" `
+            -DENABLE_QUAZIP=ON `
+            -DPKG_CONFIG_EXECUTABLE="$env:NOMACS_DEPENDENCIES\bin\pkgconf.exe" `
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache `
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: Build
+        shell: pwsh
+        run: cmake --build build
+
+      - name: Install
+        shell: pwsh
+        run: cmake --install build
+
+      - name: Make portable package
+        shell: pwsh
+        run: python scripts/make-portable.py
+
+      - name: Make msi installer
+        working-directory: installer
+        shell: cmd
+        # the certificate password is omitted - sign.bat does nothing without it
+        run: make-msi-setup.bat
+
+      - name: Upload portable package
+        uses: actions/upload-artifact@v7
+        with:
+          name: nomacs-portable-win
+          path: installer/nomacs-portable-win.zip
+          archive: false
+          retention-days: 30
+
+      - name: Upload msi installer
+        uses: actions/upload-artifact@v7
+        with:
+          name: nomacs-setup-x64
+          path: installer/nomacs-setup-x64.msi
+          archive: false
+          retention-days: 30
+
+      - name: Show ccache statistics
+        if: always()
+        shell: bash
+        run: ccache --show-stats || true
