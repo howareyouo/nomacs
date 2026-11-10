@@ -1535,15 +1535,6 @@ bool DkBasicLoader::saveToBuffer(const QString &filePath,
     return saved;
 }
 
-void DkBasicLoader::saveThumbToMetaData(const QString &filePath, QSharedPointer<QByteArray> &ba)
-{
-    if (!hasImage())
-        return;
-
-    mMetaData->setThumbnail(DkImage::createThumb(image()));
-    saveMetaData(filePath, ba);
-}
-
 /**
  * @brief writes metadata to the file on disk, if it's marked as dirty
  *
@@ -2231,19 +2222,6 @@ bool DkRawLoader::loadPreview(const QSharedPointer<QByteArray> &ba)
 }
 
 #ifdef WITH_LIBRAW
-
-// here are some hints from earlier days...
-//// (-w) Use camera white balance, if possible (otherwise, fallback to auto_wb)
-// iProcessor.imgdata.params.use_camera_wb = 1;
-//// (-a) Use automatic white balance obtained after averaging over the entire image
-// iProcessor.imgdata.params.use_auto_wb = 1;
-//// (-q 3) Adaptive homogeneity-directed de-mosaicing algorithm (AHD)
-// iProcessor.imgdata.params.user_qual = 3;
-// iProcessor.imgdata.params.output_tiff = 1;
-////iProcessor.imgdata.params.four_color_rgb = 1;
-////iProcessor.imgdata.params.output_color = 1; //sRGB  (0...raw)
-//// RAW data filtration mode during data unpacking and post-processing
-// iProcessor.imgdata.params.filtering_mode = LIBRAW_FILTERING_AUTOMATIC;
 
 QImage DkRawLoader::loadPreviewRaw(LibRaw &iProcessor) const
 {

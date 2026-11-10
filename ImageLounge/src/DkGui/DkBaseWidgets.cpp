@@ -316,15 +316,6 @@ QString DkLabel::getText()
     return mText;
 }
 /* dead code
-void DkLabel::setFontSize(int fontSize)
-{
-    mFontSize = fontSize;
-
-    QFont font;
-    font.setPointSize(fontSize);
-    QLabel::setFont(font);
-    QLabel::adjustSize();
-}
 */
 void DkLabel::stop()
 {

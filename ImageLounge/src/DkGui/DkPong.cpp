@@ -53,19 +53,9 @@ QRect DkPongSettings::field() const
     return mField;
 }
 
-void DkPongSettings::setUnit(int unit)
-{
-    mUnit = unit;
-}
-
 int DkPongSettings::unit() const
 {
     return mUnit;
-}
-
-void DkPongSettings::setBackgroundColor(const QColor &col)
-{
-    mBgCol = col;
 }
 
 QColor DkPongSettings::backgroundColor() const
@@ -81,11 +71,6 @@ void DkPongSettings::setForegroundColor(const QColor &col)
 QColor DkPongSettings::foregroundColor() const
 {
     return mFgCol;
-}
-
-void DkPongSettings::setTotalScore(int maxScore)
-{
-    mTotalScore = maxScore;
 }
 
 int DkPongSettings::totalScore() const

@@ -124,7 +124,6 @@ public slots:
     void extractImagesFromArchive();
     void trainFormat();
     void exportTiff();
-    void cleanSettings();
     void newInstance(const QString &filePath = QString());
     void showMenuBar(bool show);
     void openFileWith(QAction *action);
@@ -162,8 +161,6 @@ public slots:
     void fitFrame();
     void setRecursiveScan(bool recursive);
     void openPluginManager();
-    void clearFileHistory();
-    void clearFolderHistory();
     void restartWithTranslationUpdate();
     void restartWithPseudoColor(bool contrast);
     void restartFrameless(bool frameless);
@@ -191,7 +188,6 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
 
-    // bool gestureEvent(QGestureEvent *event);
 
     // needed to hide menu
     bool mOtherKeyPressed = true;

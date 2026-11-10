@@ -70,7 +70,6 @@ public:
     bool isSelected() const;
     QString getTitleAttribute() const;
     float getMemoryUsage() const;
-    float getFileSize() const;
 
     // file info when container was constructed
     DkFileInfo originalFileInfo() const
@@ -82,7 +81,6 @@ public:
     virtual QSharedPointer<DkMetaDataT> getMetaData();
     virtual QSharedPointer<QByteArray> getFileBuffer();
 #ifdef Q_OS_WIN
-    std::wstring getFileNameWStr() const;
 #endif
 
     bool exists();

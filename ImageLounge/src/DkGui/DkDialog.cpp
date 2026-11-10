@@ -660,11 +660,6 @@ void DkSearchDialog::setPath(const QString &dirPath)
     mPath = dirPath;
 }
 
-bool DkSearchDialog::filterPressed() const
-{
-    return mIsFilterPressed;
-}
-
 void DkSearchDialog::onSearchBarTextChanged(const QString &text)
 {
     DkTimer dt;
@@ -3204,15 +3199,6 @@ void DkMosaicDialog::compute()
         return computeMosaic(filter, suffix, mNewWidthBox->value(), mNumPatchesH->value());
     });
     mMosaicWatcher.setFuture(future);
-
-    //// debug
-    // computeMosaic(
-    //	cFile,
-    //	filter,
-    //	suffix,
-    //	fromPage->value(),
-    //	toPage->value(),
-    //	overwrite->isChecked());
 }
 
 void DkMosaicDialog::mosaicFinished()

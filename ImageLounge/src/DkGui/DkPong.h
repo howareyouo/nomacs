@@ -46,16 +46,13 @@ public:
     void setField(const QRect &field);
     QRect field() const;
 
-    void setUnit(int unit);
     int unit() const;
 
-    void setBackgroundColor(const QColor &col);
     QColor backgroundColor() const;
 
     void setForegroundColor(const QColor &col);
     QColor foregroundColor() const;
 
-    void setTotalScore(int maxScore);
     int totalScore() const;
 
     void writeSettings();

@@ -196,11 +196,6 @@ float DkImageContainer::getMemoryUsage() const
     return memSize;
 }
 
-float DkImageContainer::getFileSize() const
-{
-    return mFileInfo.size() / (1024.0f * 1024.0f);
-}
-
 DkRotatingRect DkImageContainer::cropRect()
 {
     QSharedPointer<DkMetaDataT> metaData = getMetaData();
@@ -459,10 +454,6 @@ bool DkImageContainer::setPageIdx(int skipIdx)
 }
 
 #ifdef Q_OS_WIN
-std::wstring DkImageContainer::getFileNameWStr() const
-{
-    return mFileNameStr;
-}
 #endif
 
 // DkImageContainerT --------------------------------------------------------------------

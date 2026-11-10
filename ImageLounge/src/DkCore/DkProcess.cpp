@@ -743,11 +743,6 @@ QString DkBatchProcess::inputFile() const
     return mSaveInfo.inputFilePath();
 }
 
-QString DkBatchProcess::outputFile() const
-{
-    return mSaveInfo.outputFilePath();
-}
-
 QVector<QSharedPointer<DkBatchInfo>> DkBatchProcess::batchInfo() const
 {
     return mInfos;
@@ -1306,24 +1301,6 @@ int DkBatchProcessing::getNumProcessed() const
     }
 
     return numProcessed;
-}
-
-QList<int> DkBatchProcessing::getCurrentResults()
-{
-    if (mResList.empty()) {
-        for (int idx = 0; idx < mBatchItems.size(); idx++)
-            mResList.append(batch_item_not_computed);
-    }
-
-    for (int idx = 0; idx < mResList.size(); idx++) {
-        if (mResList.at(idx) != batch_item_not_computed)
-            continue;
-
-        if (mBatchItems.at(idx).wasProcessed())
-            mResList[idx] = mBatchItems.at(idx).hasFailed() ? batch_item_failed : batch_item_succeeded;
-    }
-
-    return mResList;
 }
 
 QStringList DkBatchProcessing::getResultList() const

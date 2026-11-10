@@ -1132,7 +1132,7 @@ void DkDisplayPreference::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
-// DkDummySettings --------------------------------------------------------------------
+// DkFilePreference --------------------------------------------------------------------
 DkFilePreference::DkFilePreference(QWidget *parent)
     : DkWidget(parent)
 {
@@ -1830,31 +1830,5 @@ void DkEditorPreference::removeSetting(const QString &key, const QStringList &gr
     DefaultSettings settings;
     DkSettingsWidget::removeSetting(settings, key, groups);
 }
-
-//// DkDummySettings --------------------------------------------------------------------
-// DkDummyPreference::DkDummyPreference(QWidget* parent) : QWidget(parent) {
-//
-//	createLayout();
-//	QMetaObject::connectSlotsByName(this);
-// }
-//
-// void DkDummyPreference::createLayout() {
-
-// QHBoxLayout* layout = new QHBoxLayout(this);
-// layout->setAlignment(Qt::AlignLeft);
-
-// layout->addWidget(leftWidget);
-
-//}
-// void DkDummyPreference::paintEvent(QPaintEvent *event) {
-//
-//	// fixes stylesheets which are not applied to custom widgets
-//	QStyleOption opt;
-//	opt.init(this);
-//	QPainter p(this);
-//	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-//
-//	QWidget::paintEvent(event);
-//}
 
 }

@@ -235,7 +235,6 @@ public:
 
     void setFiles(const QStringList &fileList);
     void setPath(const QString &dirPath);
-    bool filterPressed() const;
     void setDefaultButton(int defaultButton = find_button);
 
 public slots:

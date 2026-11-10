@@ -223,7 +223,6 @@ public:
     bool hasFailed() const;
     bool wasProcessed() const;
     QString inputFile() const;
-    QString outputFile() const;
 
     QVector<QSharedPointer<DkBatchInfo>> batchInfo() const;
 
@@ -333,7 +332,6 @@ public:
     int getNumProcessed() const;
 
     bool isComputing() const;
-    QList<int> getCurrentResults();
     QStringList getResultList() const;
     QString getBatchSummary(const DkBatchProcess &batch) const;
     void waitForFinished();

@@ -802,11 +802,6 @@ QImage DkMetaDataT::getPreviewImage(int minPreviewWidth) const
     return qImg;
 }
 
-void DkMetaDataT::setUseSidecar(bool useSidecar)
-{
-    mUseSidecar = useSidecar;
-}
-
 bool DkMetaDataT::useSidecar() const
 {
     return mUseSidecar;
@@ -848,41 +843,6 @@ bool DkMetaDataT::isWriteable() const
 bool DkMetaDataT::isLoaded() const
 {
     return mExifState == loaded || mExifState == dirty || mExifState == no_data;
-}
-
-bool DkMetaDataT::isTiff() const
-{
-    return mFileInfo.suffix().contains(QRegularExpression("(tif|tiff)", QRegularExpression::CaseInsensitiveOption))
-        != 0;
-}
-
-bool DkMetaDataT::isJpg() const
-{
-    return mFileInfo.suffix().contains(QRegularExpression("(jpg|jpeg)", QRegularExpression::CaseInsensitiveOption))
-        != 0;
-}
-
-bool DkMetaDataT::isRaw() const
-{
-    return mFileInfo.suffix().contains(
-               QRegularExpression("(nef|crw|cr2|arw)", QRegularExpression::CaseInsensitiveOption))
-        != 0;
-}
-
-bool DkMetaDataT::isAVIF() const
-{
-    return mFileInfo.suffix().contains(QRegularExpression("(avif)", QRegularExpression::CaseInsensitiveOption)) != 0;
-}
-
-bool DkMetaDataT::isHEIF() const
-{
-    return mFileInfo.suffix().contains(QRegularExpression("(heic|heif)", QRegularExpression::CaseInsensitiveOption))
-        != 0;
-}
-
-bool DkMetaDataT::isJXL() const
-{
-    return mFileInfo.suffix().contains(QRegularExpression("(jxl)", QRegularExpression::CaseInsensitiveOption)) != 0;
 }
 
 bool DkMetaDataT::isDirty() const
@@ -960,50 +920,6 @@ QStringList DkMetaDataT::getIptcKeys() const
     return iptcKeys;
 }
 
-QStringList DkMetaDataT::getExifValues() const
-{
-    QStringList exifValues;
-
-    if (mExifState != loaded && mExifState != dirty)
-        return QStringList();
-
-    const Exiv2::ExifData &exifData = mExifImg->exifData();
-    const auto end = exifData.end();
-
-    if (exifData.empty())
-        return exifValues;
-
-    for (auto i = exifData.begin(); i != end; ++i) {
-        std::string tmp = i->value().toString();
-        QString info = exiv2ToQString(tmp);
-        exifValues << info;
-    }
-
-    return exifValues;
-}
-
-#if DEADCODE
-QStringList DkMetaDataT::getIptcValues() const
-{
-    QStringList iptcValues;
-
-    if (mExifState != loaded && mExifState != dirty)
-        return iptcValues;
-
-    const Exiv2::IptcData &iptcData = mExifImg->iptcData();
-    const auto endI = iptcData.end();
-
-    if (iptcData.empty())
-        return iptcValues;
-    for (auto md = iptcData.begin(); md != endI; ++md) {
-        // BUG: this won't align with getIptcKeys() due to multi-value keys
-        std::string tmp = md->value().toString();
-        iptcValues << exiv2ToQString(tmp);
-    }
-
-    return iptcValues;
-}
-#endif
 
 void DkMetaDataT::setQtValues(const QImage &img)
 {
@@ -1037,11 +953,6 @@ QString DkMetaDataT::getQtValue(const QString &key) const
 QStringList DkMetaDataT::getQtKeys() const
 {
     return mQtKeys;
-}
-
-QStringList DkMetaDataT::getQtValues() const
-{
-    return mQtValues;
 }
 
 void DkMetaDataT::setThumbnail(const QImage &thumb)
@@ -2015,63 +1926,12 @@ bool DkMetaDataHelper::hasGPS(QSharedPointer<DkMetaDataT> metaData) const
     return !getGpsCoordinates(metaData).isEmpty();
 }
 
-QStringList DkMetaDataHelper::getCamSearchTags() const
-{
-    return mCamSearchTags;
-}
-
-QStringList DkMetaDataHelper::getDescSearchTags() const
-{
-    return mDescSearchTags;
-}
-
-QStringList DkMetaDataHelper::getTranslatedCamTags() const
-{
-    return mTranslatedCamTags;
-}
-
-QStringList DkMetaDataHelper::getTranslatedDescTags() const
-{
-    return mTranslatedDescTags;
-}
-
-QStringList DkMetaDataHelper::getAllExposureModes() const
-{
-    return mExposureModes;
-}
-
-QMap<int, QString> DkMetaDataHelper::getAllFlashModes() const
-{
-    return mFlashModes;
-}
-
 // make XmpParser thread-save and enable support for ISO BMFF formats (AVIF, HEIF, JXL)
 // see http://exiv2.org/doc/classExiv2_1_1XmpParser.html#aea661a7039adb5a748eb7639c8ce9294
 void DkMetaDataHelper::initialize()
 {
     DkTimer dt;
 
-    // struct XmpLock {
-    //	CRITICAL_SECTION cs;
-    //	XmpLock() { InitializeCriticalSection(&cs); }
-    //	~XmpLock() { DeleteCriticalSection(&cs); }
-    //	static void LockUnlock(void* pData, bool fLock) {
-    //		XmpLock* pThis = reinterpret_cast<XmpLock*>(pData);
-    //		if (pThis) {
-
-    //			if (fLock) {
-    //				EnterCriticalSection(&pThis->cs);
-    //				qDebug() << "locking -------------------------";
-    //			}
-    //			else {
-    //				LeaveCriticalSection(&pThis->cs);
-    //				qDebug() << "unlocking ------------------------";
-    //			}
-    //		}
-    //	}
-    //} xmpLock;
-
-    // Exiv2::XmpParser::initialize(XmpLock::LockUnlock, &xmpLock);
     Exiv2::XmpParser::initialize();
     qDebug() << "initializing the xmp parser takes" << dt;
 

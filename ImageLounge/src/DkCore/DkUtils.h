@@ -154,7 +154,6 @@ public:
      * This function is based on the QTest::qSleep(int ms)
      * @param ms time to sleep
      **/
-    static void mSleep(int ms);
 
     /**
      * Time-limited file/dir exists check.
@@ -400,13 +399,11 @@ public:
 
     static QStringList suffixOnly(const QStringList &fileFilters);
     static QDateTime getConvertableDate(const QString &date);
-    static QDateTime convertDate(const QString &date, const QFileInfo &file = QFileInfo());
     static QString convertDateString(const QString &date, const QFileInfo &file = QFileInfo());
     static QString formatToString(int format);
     static QString cleanFraction(const QString &frac);
     static QString resolveFraction(const QString &frac);
     static std::wstring qStringToStdWString(const QString &str);
-    static QString stdWStringToQString(const std::wstring &str);
     static QString randomString(int length);
 
     static std::string stringTrim(const std::string str)
@@ -453,7 +450,6 @@ class DllCoreExport DkMemory
 {
 public:
     static double getTotalMemory();
-    static double getFreeMemory();
     static int maxImageAlloc();
 };
 
@@ -510,7 +506,6 @@ public:
     TreeItem *find(const QVariant &value, int column);
 
     QStringList parentList() const;
-    void setParent(TreeItem *parent);
     void clear();
     void remove(int rowIdx);
 

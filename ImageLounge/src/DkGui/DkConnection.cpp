@@ -405,16 +405,6 @@ void DkConnection::readWhileBytesAvailable()
     } while (bytesAvailable() > 0);
 }
 
-bool DkConnection::readDataTypeIntoBuffer()
-{
-    mBuffer = read(mNumBytesForCurrentDataType);
-    if (mBuffer.size() != mNumBytesForCurrentDataType) {
-        abort();
-        return false;
-    }
-    return true;
-}
-
 void DkConnection::processData()
 {
     switch (mCurrentDataType) {

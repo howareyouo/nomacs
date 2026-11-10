@@ -1350,12 +1350,6 @@ bool DkPlayer::isPlaying() const
     return playing;
 }
 
-void DkPlayer::setTimeToDisplay(int ms)
-{
-    timeToDisplay = ms;
-    displayTimer->setInterval(ms);
-}
-
 void DkPlayer::showTemporarily(bool autoHide)
 {
     if (autoHide)
@@ -2223,19 +2217,9 @@ bool DkFileInfoWrapper::exists() const
     return mFileExists;
 }
 
-void DkFileInfoWrapper::setExists(bool fileExists)
-{
-    mFileExists = fileExists;
-}
-
 bool DkFileInfoWrapper::inUse() const
 {
     return mUsed;
-}
-
-void DkFileInfoWrapper::setInUse(bool inUse)
-{
-    mUsed = inUse;
 }
 
 QString DkFileInfoWrapper::getFilePath() const
@@ -2370,11 +2354,6 @@ void DkListWidget::startDrag(Qt::DropActions)
 bool DkListWidget::isEmpty() const
 {
     return count() == 0;
-}
-
-void DkListWidget::setEmptyText(const QString &text)
-{
-    mEmptyText = text;
 }
 
 void DkListWidget::dropEvent(QDropEvent *event)
@@ -2806,13 +2785,4 @@ void DkDisplayWidget::updateLayout()
     }
 }
 
-// void DkDisplayWidget::changeDisplay() {
-//
-//	QRect sr = screenRect();
-//
-//	DkNoMacsFrameless* w = dynamic_cast<DkNoMacsFrameless*>(DkUtils::getMainWindow());
-//
-//	if (w)
-//		w->setGeometry(sr);
-// }
 }

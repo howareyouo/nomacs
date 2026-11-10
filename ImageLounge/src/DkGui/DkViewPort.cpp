@@ -1705,15 +1705,6 @@ void DkViewPort::loadFile(const QString &filePath)
     } else {
         mLoader->load(info);
     }
-
-    // diem: I removed this line for a) we don't support remote displays anymore and be:
-    // https://github.com/nomacs/nomacs/issues/219 qDebug() << "sync mode: " <<
-    // (DkSettingsManager::param().sync().syncMode == DkSettings::sync_mode_remote_display); if
-    // ((qApp->keyboardModifiers() == mAltMod || DkSettingsManager::param().sync().syncMode ==
-    // DkSettings::sync_mode_remote_display) &&
-    //	(hasFocus() || mController->hasFocus()) &&
-    //	mLoader->hasFile())
-    //	tcpLoadFile(0, filePath);
 }
 
 void DkViewPort::reloadFile()
@@ -1724,21 +1715,6 @@ void DkViewPort::reloadFile()
     }
 }
 
-// void DkViewPort::loadFile(int skipIdx)
-// {
-//     if (!unloadImage())
-//         return;
-//
-//     if (mLoader && !mTestLoaded)
-//         mLoader->changeFile(skipIdx);
-//
-//     // alt mod
-//     if ((qApp->keyboardModifiers() == mAltMod || DkSettingsManager::param().sync().syncActions)
-//         && (hasFocus() || mController->hasFocus())) {
-//         emit sendNewFileSignal((qint16)skipIdx);
-//         qDebug() << "emitting load next";
-//     }
-// }
 
 void DkViewPort::loadPrevFileFast()
 {

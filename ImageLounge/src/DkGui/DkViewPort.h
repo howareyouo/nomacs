@@ -92,7 +92,6 @@ public:
     void loadNextFileFast();
     void loadPrevFileFast();
     void loadFileFast(int skipIdx);
-    // void loadFile(int skipIdx);
     bool unloadImage();
     void deactivate();
     void cropImage(const DkRotatingRect &rect, const QColor &bgCol, bool cropToMetaData);

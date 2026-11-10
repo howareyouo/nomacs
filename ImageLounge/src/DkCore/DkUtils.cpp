@@ -145,41 +145,6 @@ double DkMemory::getTotalMemory()
     return mem;
 }
 
-double DkMemory::getFreeMemory()
-{
-    double mem = -1;
-
-#ifdef Q_OS_WIN
-
-    MEMORYSTATUSEX MemoryStatus;
-
-    ZeroMemory(&MemoryStatus, sizeof(MEMORYSTATUSEX));
-    MemoryStatus.dwLength = sizeof(MEMORYSTATUSEX);
-
-    if (GlobalMemoryStatusEx(&MemoryStatus)) {
-        mem = (double)MemoryStatus.ullAvailPhys;
-    }
-
-#elif defined Q_OS_LINUX and not defined(Q_OS_OPENBSD)
-
-    struct sysinfo info;
-
-    if (!sysinfo(&info))
-        mem = info.freeram;
-
-#elif defined Q_OS_MAC
-
-    // TODO: could somebody with a mac please add the corresponding calls?
-
-#endif
-
-    // convert to MB
-    if (mem > 0)
-        mem /= (1024 * 1024);
-
-    return mem;
-}
-
 int DkMemory::maxImageAlloc()
 {
     const int systemMemory = qRound(getTotalMemory());
@@ -686,16 +651,6 @@ QString DkUtils::getBuildInfo()
     return info;
 }
 
-void DkUtils::mSleep(int ms)
-{
-#ifdef Q_OS_WIN
-    Sleep(uint(ms));
-#else
-    struct timespec ts = {ms / 1000, (ms % 1000) * 1000 * 1000};
-    nanosleep(&ts, nullptr);
-#endif
-}
-
 bool DkUtils::tryExists(const DkFileInfo &file, int waitMs)
 {
     class ExistsThreadPool : public QThreadPool
@@ -910,26 +865,6 @@ QDateTime DkUtils::getConvertableDate(const QString &date)
 
         dateCreated = QDateTime(dateV, time);
     }
-
-    return dateCreated;
-}
-
-QDateTime DkUtils::convertDate(const QString &date, const QFileInfo &file)
-{
-    // convert date
-    QDateTime dateCreated;
-    QStringList dateSplit = date.split(QRegularExpression("[/: \t]"));
-
-    if (dateSplit.size() >= 3) {
-        QDate dateV = QDate(dateSplit[0].toInt(), dateSplit[1].toInt(), dateSplit[2].toInt());
-        QTime time;
-
-        if (dateSplit.size() >= 6)
-            time = QTime(dateSplit[3].toInt(), dateSplit[4].toInt(), dateSplit[5].toInt());
-
-        dateCreated = QDateTime(dateV, time);
-    } else if (file.exists())
-        dateCreated = file.birthTime();
 
     return dateCreated;
 }
@@ -1291,16 +1226,6 @@ std::wstring DkUtils::qStringToStdWString(const QString &str)
 #endif
 }
 
-// code from: http://stackoverflow.com/questions/5625884/conversion-of-stdwstring-to-qstring-throws-linker-error
-QString DkUtils::stdWStringToQString(const std::wstring &str)
-{
-#ifdef _MSC_VER
-    return QString::fromUtf16((const char16_t *)str.c_str());
-#else
-    return QString::fromStdWString(str);
-#endif
-}
-
 // DkConvertFileName --------------------------------------------------------------------
 DkFileNameConverter::DkFileNameConverter(const QString &p)
     : mFrags{}
@@ -1593,11 +1518,6 @@ void TreeItem::parentList(QStringList &parentKeys) const
 TreeItem *TreeItem::parent() const
 {
     return parentItem;
-}
-
-void TreeItem::setParent(TreeItem *parent)
-{
-    parentItem = parent;
 }
 
 bool TabMiddleMouseCloser::eventFilter(QObject *obj, QEvent *event)

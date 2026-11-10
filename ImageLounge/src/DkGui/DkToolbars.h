@@ -58,7 +58,6 @@ public:
     DkQuickAccessEdit *getQuickAccess() const;
 
 public slots:
-    void closeQuickAccess();
 
 protected:
     void createLayout();
@@ -138,7 +137,6 @@ private:
     void clearAllSliders();
     void updateGradient();
     qreal getNormedPos(int pos);
-    int getAbsolutePos(qreal pos);
 
     int mClickAreaHeight;
     int mDeleteSliderDist;

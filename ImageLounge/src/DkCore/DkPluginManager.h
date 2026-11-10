@@ -117,7 +117,6 @@ public:
     // attributes
     QString pluginPath() const;
     QString pluginName() const;
-    QString authorName() const;
     QString company() const;
     QString version() const;
     QString description() const;
@@ -127,7 +126,6 @@ public:
     QString actionIdPrefix() const;
 
     QDate dateCreated() const;
-    QDate dateModified() const;
 
     QMenu *pluginMenu() const;
 
@@ -222,7 +220,6 @@ public:
 
     QVector<QSharedPointer<DkPluginContainer>> getPlugins() const;
     QSharedPointer<DkPluginContainer> getPluginByName(const QString &pluginName) const;
-    QSharedPointer<DkPluginContainer> getPluginByPath(const QString &path) const;
 
     void reload();
     void removePlugin(QSharedPointer<DkPluginContainer> plugin);
@@ -233,11 +230,9 @@ public:
 
     bool singlePluginLoad(const QString &filePath);
 
-    QVector<QSharedPointer<DkPluginContainer>> getBasicPlugins() const;
     QVector<QSharedPointer<DkPluginContainer>> getBatchPlugins() const;
 
     // functions for active plugin
-    void clearRunningPlugin();
     QSharedPointer<DkPluginContainer> getRunningPlugin() const;
     void runPlugin(QSharedPointer<DkPluginContainer> plugin);
 
@@ -259,9 +254,6 @@ class DllCoreExport DkPluginManagerDialog : public QDialog
 public:
     explicit DkPluginManagerDialog(QWidget *parent = nullptr);
     ~DkPluginManagerDialog() override;
-
-    void deleteInstance(QSharedPointer<DkPluginContainer> plugin);
-    QMap<QString, QString> getPreviouslyInstalledPlugins();
 
 protected slots:
     void closePressed();
@@ -292,7 +284,6 @@ public:
 
 public slots:
     void uninstallPlugin(const QModelIndex &index);
-    void reloadPlugins();
 
 private:
     void createLayout();
@@ -322,8 +313,6 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     bool removeRows(int position, int rows, const QModelIndex &index = QModelIndex()) override;
-
-    void setDataToInsert(QSharedPointer<DkPluginContainer> newData);
 
 private:
     QSharedPointer<DkPluginContainer> mPluginToInsert;

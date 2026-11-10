@@ -91,11 +91,6 @@ void DkMainToolBar::setQuickAccessModel(QStandardItemModel *model)
     mQuickAccessEdit->setFocus(Qt::MouseFocusReason);
 }
 
-void DkMainToolBar::closeQuickAccess()
-{
-    mQuickAccessEdit->clearAccess();
-}
-
 void DkMainToolBar::allActionsAdded()
 {
     // right align search filters
@@ -444,11 +439,6 @@ void DkGradient::moveSlider(DkColorSlider *sender, int dragDistX, int yPos)
 qreal DkGradient::getNormedPos(int pos)
 {
     return (qreal)(pos) / (qreal)(width() - mSliderWidth);
-}
-
-int DkGradient::getAbsolutePos(qreal pos)
-{
-    return (int)pos * width();
 }
 
 void DkGradient::paintEvent(QPaintEvent *)

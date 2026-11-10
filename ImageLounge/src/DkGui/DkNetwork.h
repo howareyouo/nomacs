@@ -103,17 +103,14 @@ public:
     bool removePeer(quint16 peerId);
     bool setSynchronized(quint16 peerId, bool synchronized);
     bool setTitle(quint16 peerId, const QString &title);
-    bool setShowInMenu(quint16 peerId, bool showInMenu);
     QList<DkPeer *> getPeerList();
     DkPeer *getPeerById(quint16 id);
-    DkPeer *getPeerByAddress(const QHostAddress &address, quint16 port) const;
 
     QList<DkPeer *> getSynchronizedPeers() const;
     QList<quint16> getSynchronizedPeerServerPorts() const;
     QList<DkPeer *> getActivePeers() const;
 
     DkPeer *getPeerByServerport(quint16 port) const;
-    bool alreadyConnectedTo(const QHostAddress &address, quint16 port) const;
     void print() const;
 
 private:

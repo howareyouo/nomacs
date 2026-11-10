@@ -58,8 +58,6 @@ class DkXmlUpdateChecker
 public:
     DkXmlUpdateChecker();
 
-    QVector<DkPackage> updatesAvailable(QXmlStreamReader &localXml, QXmlStreamReader &remoteXml) const;
-
 protected:
     QVector<DkPackage> parse(QXmlStreamReader &reader) const;
 };

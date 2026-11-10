@@ -154,8 +154,6 @@ public:
     explicit DkPlayer(QWidget *parent = nullptr);
     ~DkPlayer() override = default;
 
-    void setTimeToDisplay(int ms = 1000);
-
 signals:
     void nextSignal();
     void previousSignal();
@@ -623,10 +621,8 @@ public:
 
     QString getFilePath() const;
     bool exists() const;
-    void setExists(bool fileExists);
 
     bool inUse() const;
-    void setInUse(bool inUse);
 
 protected:
     QFileInfo mFileInfo;
@@ -801,8 +797,6 @@ public:
     void startDrag(Qt::DropActions supportedActions) override;
     bool isEmpty() const;
 
-    void setEmptyText(const QString &text);
-
 signals:
     void dataDroppedSignal() const;
 
@@ -895,7 +889,6 @@ public:
     void setCurrentIndex(int index);
 
     // public slots:
-    //	void changeDisplay();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;

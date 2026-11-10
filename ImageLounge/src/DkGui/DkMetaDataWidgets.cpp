@@ -275,26 +275,6 @@ QVariant DkMetaDataModel::headerData(int section, Qt::Orientation orientation, i
     return rootItem->data(section);
 }
 
-// bool DkMetaDataModel::setData(const QModelIndex& index, const QVariant& value, int role) {
-//
-//	if (!index.isValid() || role != Qt::EditRole)
-//		return false;
-//
-//	//if (index.column() == 1) {
-//
-//	//	TreeItem* item = static_cast<TreeItem*>(index.internalPointer());
-//	//	item->setData(ks, index.column());
-//
-//	//}
-//	//else {
-//		TreeItem* item = static_cast<TreeItem*>(index.internalPointer());
-//		item->setData(value, index.column());
-//	//}
-//
-//	emit dataChanged(index, index);
-//	return true;
-// }
-//
 Qt::ItemFlags DkMetaDataModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())

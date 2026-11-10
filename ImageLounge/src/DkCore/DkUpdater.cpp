@@ -79,34 +79,6 @@ QString DkPackage::name() const
 // DkXmlUpdateChecker --------------------------------------------------------------------
 DkXmlUpdateChecker::DkXmlUpdateChecker() = default;
 
-QVector<DkPackage> DkXmlUpdateChecker::updatesAvailable(QXmlStreamReader &localXml, QXmlStreamReader &remoteXml) const
-{
-    QVector<DkPackage> localPackages = parse(localXml);
-    QVector<DkPackage> remotePackages = parse(remoteXml);
-    QVector<DkPackage> updatePackages;
-
-    for (const DkPackage &p : localPackages) {
-        int idx = remotePackages.indexOf(p);
-
-        if (idx != -1) {
-            bool isEqual = remotePackages[idx].version() == p.version();
-            qDebug() << "checking" << p.name() << "v" << p.version();
-
-            if (!isEqual) // we assume that the remote is _always_ newer than the local version
-                updatePackages.append(remotePackages[idx]);
-            else
-                qDebug() << "up-to-date";
-        } else
-            qDebug() << "I could not find" << p.name() << "in the repository";
-    }
-
-    if (localPackages.empty() || remotePackages.empty())
-        qDebug() << "WARNING: I could not find any packages. local (" << localPackages.size() << ") remote ("
-                 << remotePackages.size() << ")";
-
-    return updatePackages;
-}
-
 QVector<DkPackage> DkXmlUpdateChecker::parse(QXmlStreamReader &reader) const
 {
     QVector<DkPackage> packages;

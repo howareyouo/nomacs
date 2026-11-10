@@ -666,17 +666,6 @@ bool DkPeerList::setTitle(quint16 peerId, const QString &title)
     return true;
 }
 
-bool DkPeerList::setShowInMenu(quint16 peerId, bool showInMenu)
-{
-    if (!peerList.contains(peerId))
-        return false;
-    DkPeer *peer = peerList.value(peerId);
-    peer->mShowInMenu = showInMenu;
-    // peerList.replace(peerId, peer);
-
-    return true;
-}
-
 QList<DkPeer *> DkPeerList::getSynchronizedPeers() const
 {
     QList<DkPeer *> sychronizedPeers;
@@ -721,28 +710,9 @@ DkPeer *DkPeerList::getPeerByServerport(quint16 port) const
     return nullptr;
 }
 
-bool DkPeerList::alreadyConnectedTo(const QHostAddress &address, quint16 port) const
-{
-    foreach (DkPeer *peer, peerList) {
-        if (peer->mHostAddress == address
-            && peer->mLocalServerPort == port) // TODO: wieso localserver port ... aber es funkt
-            return true;
-    }
-    return false;
-}
-
 DkPeer *DkPeerList::getPeerById(quint16 id)
 {
     return peerList.value(id, 0);
-}
-
-DkPeer *DkPeerList::getPeerByAddress(const QHostAddress &address, quint16 port) const
-{
-    foreach (DkPeer *peer, peerList) {
-        if (peer->mHostAddress == address && peer->mLocalServerPort == port)
-            return peer;
-    }
-    return nullptr; // should not happen
 }
 
 void DkPeerList::print() const

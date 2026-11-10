@@ -116,7 +116,6 @@ protected:
     virtual bool readProtocolHeader();
     virtual void checkState();
     int readDataIntoBuffer(int maxSize = MaxBufferSize);
-    bool readDataTypeIntoBuffer();
     virtual void processData();
     virtual void readWhileBytesAvailable();
     virtual void readGreetingMessage() = 0;

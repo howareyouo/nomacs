@@ -266,20 +266,6 @@ double DkRotatingRect::getAngle() const
     return std::atan2(vec.y(), vec.x());
 }
 
-float DkRotatingRect::getAngleDeg() const
-{
-    auto sAngle = (float)(getAngle() * DK_RAD2DEG);
-
-    while (sAngle > 90)
-        sAngle -= 180;
-    while (sAngle < -90)
-        sAngle += 180;
-
-    sAngle = qRound(sAngle * 100) / 100.0f; // round to 2 digits
-
-    return sAngle;
-}
-
 void DkRotatingRect::getTransform(QTransform &tForm, QPointF &size) const
 {
     if (mRect.size() < 4)

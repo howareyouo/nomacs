@@ -408,11 +408,6 @@ QString DkPluginContainer::pluginName() const
     return mPluginName;
 }
 
-QString DkPluginContainer::authorName() const
-{
-    return mAuthorName;
-}
-
 QString DkPluginContainer::company() const
 {
     return mCompany;
@@ -471,11 +466,6 @@ QString DkPluginContainer::actionIdPrefix() const
 QDate DkPluginContainer::dateCreated() const
 {
     return mDateCreated;
-}
-
-QDate DkPluginContainer::dateModified() const
-{
-    return mDateModified;
 }
 
 QMenu *DkPluginContainer::pluginMenu() const
@@ -597,16 +587,6 @@ void DkPluginManagerDialog::showEvent(QShowEvent *ev)
     QDialog::showEvent(ev);
 }
 
-void DkPluginManagerDialog::deleteInstance(QSharedPointer<DkPluginContainer> plugin)
-{
-    DkPluginManager::instance().removePlugin(plugin);
-}
-
-QMap<QString, QString> DkPluginManagerDialog::getPreviouslyInstalledPlugins()
-{
-    return previouslyInstalledPlugins;
-}
-
 /**********************************************************************************
  * DkPluginTableWidget : Widget with table views containing plugin data
  **********************************************************************************/
@@ -697,12 +677,6 @@ void DkPluginTableWidget::createLayout()
 //	// TODO!
 //	//DkInstallUpdater::updateNomacs("--manage-packages");
 // }
-
-void DkPluginTableWidget::reloadPlugins()
-{
-    DkPluginManager::instance().reload();
-    updateInstalledModel();
-}
 
 void DkPluginTableWidget::filterTextChanged()
 {
@@ -833,11 +807,6 @@ bool DkInstalledPluginsModel::removeRows(int position, int rows, const QModelInd
     emit dataChanged(index, index);
 
     return true;
-}
-
-void DkInstalledPluginsModel::setDataToInsert(QSharedPointer<DkPluginContainer> newData)
-{
-    mPluginToInsert = newData;
 }
 
 //*********************************************************************************
@@ -1231,31 +1200,6 @@ QSharedPointer<DkPluginContainer> DkPluginManager::getPluginByName(const QString
     return QSharedPointer<DkPluginContainer>();
 }
 
-QSharedPointer<DkPluginContainer> DkPluginManager::getPluginByPath(const QString &path) const
-{
-    for (auto p : mPlugins) {
-        if (p && path == p->pluginPath())
-            return p;
-    }
-
-    return QSharedPointer<DkPluginContainer>();
-}
-
-QVector<QSharedPointer<DkPluginContainer>> DkPluginManager::getBasicPlugins() const
-{
-    QVector<QSharedPointer<DkPluginContainer>> plugins;
-
-    for (auto plugin : mPlugins) {
-        DkPluginInterface *p = plugin->plugin();
-
-        if (p && p->interfaceType() == DkPluginInterface::interface_basic) {
-            plugins.append(plugin);
-        }
-    }
-
-    return plugins;
-}
-
 QVector<QSharedPointer<DkPluginContainer>> DkPluginManager::getBatchPlugins() const
 {
     QVector<QSharedPointer<DkPluginContainer>> plugins;
@@ -1281,12 +1225,6 @@ QSharedPointer<DkPluginContainer> DkPluginManager::getRunningPlugin() const
     }
 
     return QSharedPointer<DkPluginContainer>();
-}
-
-void DkPluginManager::clearRunningPlugin()
-{
-    for (auto plugin : mPlugins)
-        plugin->setActive(false);
 }
 
 void DkPluginManager::runPlugin(QSharedPointer<DkPluginContainer> plugin)

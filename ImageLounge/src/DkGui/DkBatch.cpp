@@ -164,19 +164,7 @@ void DkBatchContainer::showContent(bool show) const
     if (show)
         emit showSignal();
 
-    // mShowButton->click();
-    // contentWidget()->setVisible(show);
 }
-
-// void DkBatchContainer::setTitle(const QString& titleString) {
-//	mTitleString = titleString;
-//	mTitleLabel->setText(titleString);
-// }
-//
-// void DkBatchContainer::setHeader(const QString& headerString) {
-//	mHeaderString = headerString;
-//	mHeaderLabel->setText(headerString);
-// }
 
 // DkInputTextEdit --------------------------------------------------------------------
 DkInputTextEdit::DkInputTextEdit(QWidget *parent /* = 0 */)
@@ -309,16 +297,6 @@ void DkInputTextEdit::clear()
 {
     mResultList.clear();
     QTextEdit::clear();
-}
-
-QString DkInputTextEdit::firstDirPath() const
-{
-    QStringList fl = getFileList();
-
-    if (fl.isEmpty())
-        return "";
-
-    return QFileInfo(fl[0]).absolutePath();
 }
 
 // File Selection --------------------------------------------------------------------
@@ -1534,20 +1512,6 @@ DkBatchPluginWidget::DkBatchPluginWidget(QWidget *parent /* = 0 */, Qt::WindowFl
 
 void DkBatchPluginWidget::transferProperties(QSharedPointer<DkPluginBatch> batchPlugin) const
 {
-    QVector<QSharedPointer<DkPluginContainer>> plugins = DkPluginManager::instance().getBatchPlugins();
-
-    //// I don't like const casts
-    //// BUT: load settings effectively only opens groups (which is not const)
-    // QSettings& settings = const_cast<QSettings&>(mSettings);
-
-    // for (auto p : plugins) {
-    //
-    //	if (p->batchPlugin()) {
-    //		// the const ca
-    //		p->batchPlugin()->loadSettings(settings);
-    //	}
-    // }
-
     QStringList pluginList = selectedPlugins();
     batchPlugin->setProperties(pluginList);
 }
@@ -3020,15 +2984,6 @@ void DkBatchWidget::saveProfile(const QString &profilePath) const
 void DkBatchWidget::loadProfile(const QString &profilePath)
 {
     DkBatchConfig bc = DkBatchProfile::loadProfile(profilePath);
-
-    // allow loading without functions (i.e. image conversions)
-    // if (bc.getProcessFunctions().empty()) {
-    //
-    //	QMessageBox::critical(DkUtils::getMainWindow(),
-    //		tr("Error Loading Profile"),
-    //		tr("Sorry, I cannot load batch settings from: \n%1").arg(profilePath));
-    //	return;
-    //}
 
     applyDefault();
 

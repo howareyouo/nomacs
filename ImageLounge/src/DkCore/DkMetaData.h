@@ -108,11 +108,8 @@ public:
     QString getMimeType() const;
     QImage getPreviewImage(int minPreviewWidth = 0) const;
     QStringList getExifKeys() const;
-    QStringList getExifValues() const;
     QStringList getIptcKeys() const;
     QStringList getQtKeys() const;
-    QStringList getQtValues() const;
-    // QStringList getIptcValues() const;
     QStringList getXmpKeys() const;
 
     void getFileMetaData(QStringList &fileKeys, QStringList &fileValues) const;
@@ -129,18 +126,11 @@ public:
     void setThumbnail(const QImage &thumb);
     void setQtValues(const QImage &cImg);
     static QString exiv2ToQString(std::string exifString);
-    void setUseSidecar(bool useSideCar = false);
     QImage cleanImage(const QImage &img);
 
     bool hasMetaData() const;
     bool isWriteable() const;
     bool isLoaded() const;
-    bool isTiff() const;
-    bool isJpg() const;
-    bool isRaw() const;
-    bool isAVIF() const;
-    bool isHEIF() const;
-    bool isJXL() const;
     bool isDirty() const;
     bool useSidecar() const;
     void printMetaData() const; // only for debug
@@ -212,12 +202,6 @@ public:
     QString translateKey(const QString &key) const;
     QString formatSpecialValue(const QString &key, const QString &value) const;
 
-    QStringList getCamSearchTags() const;
-    QStringList getDescSearchTags() const;
-    QStringList getTranslatedCamTags() const;
-    QStringList getTranslatedDescTags() const;
-    QStringList getAllExposureModes() const;
-    QMap<int, QString> getAllFlashModes() const;
 
     static void initialize();
 

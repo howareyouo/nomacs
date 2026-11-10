@@ -719,15 +719,6 @@ QMenu *DkActionManager::createContextMenu(QWidget *parent)
     return mContextMenu;
 }
 
-// TODO: fix that once and for all
-// QMenu* DkActionManager::pluginMenu(QWidget* parent) const {
-//
-//	if (!mPluginMenu)
-//		mPluginMenu = new QMenu(QObject::tr("&Plugins"), parent);
-//
-//	return mPluginMenu;
-//}
-
 QVector<QAction *> DkActionManager::openWithActions() const
 {
     if (!openWithMenu())

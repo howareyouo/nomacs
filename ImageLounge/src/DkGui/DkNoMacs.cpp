@@ -345,16 +345,6 @@ void DkNoMacs::createActions()
     connect(am.appManager(), &DkAppManager::openFileSignal, this, &DkNoMacs::openFileWith);
 }
 
-void DkNoMacs::clearFileHistory()
-{
-    DkSettingsManager::param().global().recentFiles.clear();
-}
-
-void DkNoMacs::clearFolderHistory()
-{
-    DkSettingsManager::param().global().recentFolders.clear();
-}
-
 DkCentralWidget *DkNoMacs::getTabWidget() const
 {
     return dynamic_cast<DkCentralWidget *>(centralWidget());
@@ -495,67 +485,6 @@ void DkNoMacs::mouseMoveEvent(QMouseEvent *event)
 {
     QMainWindow::mouseMoveEvent(event);
 }
-
-// bool DkNoMacs::gestureEvent(QGestureEvent *event) {
-//
-//	DkViewPort* vp = viewport();
-//
-//	if (QGesture *swipe = event->gesture(Qt::SwipeGesture)) {
-//		QSwipeGesture* swipeG = static_cast<QSwipeGesture *>(swipe);
-//
-//		qDebug() << "swipe detected\n";
-//		if (vp) {
-//
-//			if (swipeG->horizontalDirection() == QSwipeGesture::Left)
-//				vp->loadNextFileFast();
-//			else if (swipeG->horizontalDirection() == QSwipeGesture::Right)
-//				vp->loadPrevFileFast();
-//
-//			// TODO: recognize some other gestures please
-//		}
-//
-//	}
-//	else if (QGesture *pan = event->gesture(Qt::PanGesture)) {
-//
-//		QPanGesture* panG = static_cast<QPanGesture *>(pan);
-//
-//		qDebug() << "you're speedy: " << panG->acceleration();
-//
-//		QPointF delta = panG->delta();
-//
-//		if (panG->acceleration() > 10 && delta.x() && fabs(delta.y()/delta.x()) < 0.2) {
-//
-//			if (delta.x() < 0)
-//				vp->loadNextFileFast();
-//			else
-//				vp->loadPrevFileFast();
-//		}
-//
-//		if (vp)
-//			vp->moveView(panG->delta());
-//	}
-//	else if (QGesture *pinch = event->gesture(Qt::PinchGesture)) {
-//
-//		QPinchGesture* pinchG = static_cast<QPinchGesture *>(pinch);
-//
-//		//if (pinchG->changeFlags() == QPinchGesture::ChangeFlag.ScaleFactorChanged) {
-//		qDebug() << "scale Factor: " << pinchG->scaleFactor();
-//		if (pinchG->scaleFactor() != 0 && vp) {
-//			vp->zoom((float)pinchG->scaleFactor());
-//		}
-//		else if (pinchG->rotationAngle() != 0 && vp) {
-//
-//			float angle = (float)pinchG->rotationAngle();
-//			qDebug() << "angle: " << angle;
-//			//vp->rotate(angle);
-//		}
-//	}
-//
-//	qDebug() << "gesture event (NoMacs)";
-//
-//	//	pinchTriggered(static_cast<QPinchGesture *>(pinch));
-//	return true;
-// }
 
 void DkNoMacs::readSettings()
 {
@@ -1495,16 +1424,6 @@ Add any other context about the problem.
     QDesktopServices::openUrl(url);
 }
 
-void DkNoMacs::cleanSettings()
-{
-    DefaultSettings settings;
-    settings.clear();
-
-    readSettings();
-    resize(400, 225);
-    move(100, 100);
-}
-
 void DkNoMacs::newInstance(const QString &filePath)
 {
     QStringList args;
@@ -1636,10 +1555,6 @@ bool DkNoMacs::eventFilter(QObject *, QEvent *event)
         } else if (keyEvent->key() == Qt::Key_Escape && DkSettingsManager::param().app().closeOnEsc)
             close();
     }
-    // if (event->type() == QEvent::Gesture) {
-    //	return gestureEvent(static_cast<QGestureEvent*>(event));
-    // }
-
     return false;
 }
 
@@ -2251,10 +2166,6 @@ bool DkNoMacsFrameless::eventFilter(QObject *, QEvent *event)
             return true;
         }
     }
-    // if (event->type() == QEvent::Gesture) {
-    //	return gestureEvent(static_cast<QGestureEvent*>(event));
-    // }
-
     return false;
 }
 

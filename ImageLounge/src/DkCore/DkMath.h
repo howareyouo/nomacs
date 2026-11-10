@@ -863,7 +863,6 @@ public:
     QSize size() const;
     void setCenter(const QPointF &center);
     double getAngle() const;
-    float getAngleDeg() const;
     void getTransform(QTransform &tForm, QPointF &size) const;
     QRectF toExifRect(const QSize &size) const;
     static DkRotatingRect fromExifRect(const QRectF &rect, const QSize &size, double angle);
