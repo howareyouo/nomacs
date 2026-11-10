@@ -20,7 +20,9 @@ on:
       - .github/workflows/macos.yml
 
 env:
-  QT_VERSION: 6.11.1
+  # 6.11+ uses a new online repository layout that aqtinstall cannot install yet
+  # (miurahr/aqtinstall#1047); 6.10.3 is the newest version it can fetch
+  QT_VERSION: 6.10.3
   QT_ARCH: win64_msvc2022_64
   # the *.pc files inside the prebuilt dependencies hardcode this prefix
   NOMACS_DEPENDENCIES: C:\projects\nomacs\3rd-party
